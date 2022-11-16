@@ -5,7 +5,8 @@ class bancoApp():
     def __init__(self):
         #SET ROOT UP
         self.root = tk.Tk()
-        self.root.geometry('770x570+600+20')
+        self.root.geometry('770x570+1400+20')
+        self.root.title('BANCO')
         #Set title from root
         self.title_r = ttk.Label(self.root,text='Cuenta Bancaria',font=('Monocraft',25))
         self.title_r.pack(side='top')
@@ -38,12 +39,13 @@ class bancoApp():
         self.root.mainloop()
 
     def save (self):
-        global DNI,num_cuenta,interes,saldo_actual
+        global DNI,num_cuenta,interes,saldo_actual,int_diario
 
         num_cuenta = int(self.account_entry.get())
         DNI = int(self.dni_entry.get())
         interes = int(self.interes_entry.get())
         saldo_actual = float(self.saldo_entry.get())
+        int_diario = 0
         self.menu()
 
     def clear(self):
@@ -60,22 +62,36 @@ class bancoApp():
 
     def update (self):
         self.clear()
-        self.menu_button = tk.Button(self.mainframe,text='Volver a Menu principal.',font=('Monocraft',17),command=self.menu)
-        self.menu_button.grid(row=5,column=1,padx=5,pady=10,sticky='NWES')
-        self.agregar = tk.Button(self.mainframe,text='Ingresar Dinero',font=('Monocraft',15),command=self.suma).grid(row=1,column=1,padx=5,pady=10,sticky='NWES')
+        #Suma Method
+        self.agregar = tk.Button(self.mainframe,text='Ingresar  >>',font=('Monocraft',15),command=self.suma).grid(row=1,column=1,padx=5,pady=10,sticky='NWES')
         self.agregar_entry = ttk.Entry(self.mainframe,font=('Monocraft',15))
         self.agregar_entry.grid(row=1,column=2,padx=5,pady=10,sticky='NWES')
-      
-        self.pofavo = ttk.Label(self.mainframe,text=saldo_actual,font=('Monocraft',15)).grid(row=2,column=1,padx=5,pady=10,sticky='NWES')
+        #Resta Method
+        self.retirar = tk.Button(self.mainframe,text='Retirar dinero >>',font=('Monocraft',15),command=self.resta)
+        self.retirar.grid(row=2,column=1,padx=5,pady=10,sticky='NWES')
+        #Entry
+        self.retirar_entry = ttk.Entry(self.mainframe,font=('Monocraft',15))
+        self.retirar_entry.grid(row=2,column=2,padx=5,pady=10,sticky='NWES')
+        #Saldo crudo
+        self.saldo_crudo = ttk.Label(self.mainframe,text=saldo_actual,font=('Monocraft',15)).grid(row=3,column=1,padx=5,pady=10,sticky='NWES')
+        #Menu
+        self.men_button = tk.Button(self.mainframe,text='Volver a Menu principal.',font=('Monocraft',17),command=self.menu)
+        self.men_button.grid(row=5,column=1,padx=5,pady=10,sticky='NWES')
+
         
-    	#Rezanding
     def suma (self):
-        global saldo_actual
+        global saldo_actual,int_diario
         sum = float(self.agregar_entry.get())
         saldo_actual = saldo_actual +sum   
+        int_diario = (saldo_actual*interes)/365
         self.update()
     
-
+    def resta(self):
+        global saldo_actual, int_diario
+        res = float(self.retirar_entry.get())
+        saldo_actual = saldo_actual-res
+        int_diario = (saldo_actual*interes)/365
+        self.update()
 
     def display (self):
         self.clear()
@@ -94,9 +110,7 @@ class bancoApp():
         self.menu.grid(row=5,column=1,padx=5,pady=10,sticky='NWES')
         #Set saldo 
         self.saldo = ttk.Label(self.mainframe,text='Saldo Actual >>',font=('Monocraft',20)).grid(row=4,column=1,padx=0,pady=15,sticky='NWES')
-        self.saldo_label = ttk.Label(self.mainframe,text=saldo_actual,font=('Monocraft',20)).grid(row=4,column=2,padx=0,pady=15,sticky='NWES')
+        self.saldo_label = ttk.Label(self.mainframe,text=saldo_actual+int_diario,font=('Monocraft',20)).grid(row=4,column=2,padx=0,pady=15,sticky='NWES')
         
-    
-
 if __name__ =='__main__':
     bancoApp()
